@@ -50,15 +50,40 @@
     </script>
 
     <style>
+        /* 1. Default Light Theme (الوضع الفاتح) */
         :root {
             --primary-color: #2e7d32;
             --primary-light: #4caf50;
-            --accent-color: #81c784;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-glow: rgba(76, 175, 80, 0.3);
+            --accent-color: #1b5e20;
+            --bg-body: #f8faf9;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --hero-card-bg: rgba(255, 255, 255, 0.7);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-glow: rgba(76, 175, 80, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --footer-bg: #ffffff;
+            --hero-overlay: rgba(255, 255, 255, 0.45);
+        }
+
+        /* 2. Auto Dark Mode (التحول التلقائي للوضع الداكن لو جهاز المستخدم داكن) */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #4caf50;
+                --primary-light: #81c784;
+                --accent-color: #a5d6a7;
+                --bg-body: #0f172a;
+                --header-bg: rgba(15, 23, 42, 0.85);
+                --card-bg: rgba(30, 41, 59, 0.75);
+                --hero-card-bg: rgba(15, 23, 42, 0.75);
+                --text-main: #f8fafc;
+                --text-muted: #94a3b8;
+                --border-glow: rgba(76, 175, 80, 0.35);
+                --glass-border: rgba(255, 255, 255, 0.1);
+                --footer-bg: #0a0f1d;
+                --hero-overlay: rgba(15, 23, 42, 0.6);
+            }
         }
 
         * {
@@ -70,13 +95,10 @@
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(46, 125, 50, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(129, 199, 132, 0.1) 0px, transparent 50%);
-            background-attachment: fixed;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             line-height: 1.7;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* Navbar */
@@ -85,13 +107,16 @@
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.85);
+            background: var(--header-bg);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
             padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: background 0.4s ease;
         }
 
         .logo {
@@ -114,17 +139,17 @@
         }
 
         nav a {
-            color: var(--text-light);
+            color: var(--text-main);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             transition: color 0.3s;
         }
 
         nav a:hover {
-            color: var(--accent-color);
+            color: var(--primary-color);
         }
 
-        /* Hero Section */
+        /* Hero Section with Adaptive Background Overlay */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -132,20 +157,31 @@
             justify-content: center;
             text-align: center;
             padding: 120px 20px 60px;
-            background: radial-gradient(circle at center, rgba(46, 125, 50, 0.2) 0%, transparent 70%);
+            background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), 
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+            transition: background 0.4s ease;
         }
 
-        .hero-content {
-            max-width: 800px;
+        .hero-glass-card {
+            background: var(--hero-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 50px 30px;
+            max-width: 850px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: background 0.4s ease;
         }
 
         .badge {
             background: rgba(76, 175, 80, 0.15);
-            color: var(--accent-color);
-            padding: 6px 16px;
+            color: var(--primary-color);
+            padding: 6px 18px;
             border-radius: 50px;
             border: 1px solid var(--border-glow);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 700;
             display: inline-block;
             margin-bottom: 20px;
         }
@@ -153,14 +189,16 @@
         .hero h1 {
             font-size: 2.8rem;
             font-weight: 800;
+            color: var(--accent-color);
             margin-bottom: 20px;
             line-height: 1.3;
         }
 
         .hero p {
             font-size: 1.2rem;
-            color: var(--text-muted);
+            color: var(--text-main);
             margin-bottom: 30px;
+            font-weight: 600;
         }
 
         .cta-buttons {
@@ -184,34 +222,34 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
             color: white;
-            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(76, 175, 80, 0.6);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
         }
 
         .btn-whatsapp {
             background: #25D366;
             color: white;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
         .btn-whatsapp:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
         }
 
         .btn-outline {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-light);
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
         }
 
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         /* Sections */
@@ -226,12 +264,14 @@
 
         .section-title h2 {
             font-size: 2.2rem;
-            color: var(--text-light);
+            color: var(--accent-color);
             margin-bottom: 10px;
+            font-weight: 800;
         }
 
         .section-title p {
             color: var(--text-muted);
+            font-size: 1.1rem;
         }
 
         /* Grid Cards Layout */
@@ -243,35 +283,52 @@
 
         .glass-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 30px;
+            overflow: hidden;
             transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
         }
 
         .glass-card:hover {
             transform: translateY(-8px);
-            border-color: var(--border-glow);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary-light);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.2);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
         }
 
         .card-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(76, 175, 80, 0.1);
-            border-radius: 15px;
+            width: 50px;
+            height: 50px;
+            background: rgba(76, 175, 80, 0.15);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            color: var(--accent-color);
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
         }
 
         .glass-card h3 {
             font-size: 1.3rem;
-            margin-bottom: 12px;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .glass-card p {
@@ -279,10 +336,11 @@
             font-size: 0.95rem;
         }
 
-        /* Delivery Highlight Banner */
+        /* Delivery Banner */
         .delivery-banner {
-            background: linear-gradient(135deg, rgba(46, 125, 50, 0.3), rgba(15, 23, 42, 0.8));
+            background: var(--card-bg);
             border: 1px solid var(--border-glow);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 40px;
             display: flex;
@@ -291,19 +349,26 @@
             gap: 20px;
             flex-wrap: wrap;
             margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
         .delivery-info h3 {
             font-size: 1.8rem;
             color: var(--accent-color);
             margin-bottom: 8px;
+            font-weight: 800;
         }
 
-        /* Contact & Location Footer */
+        .delivery-info p {
+            color: var(--text-muted);
+        }
+
+        /* Footer */
         footer {
-            background: rgba(10, 15, 30, 0.95);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--footer-bg);
+            border-top: 1px solid var(--glass-border);
             padding: 50px 5% 20px;
+            transition: background 0.4s ease;
         }
 
         .footer-content {
@@ -316,6 +381,7 @@
         .footer-info h3 {
             margin-bottom: 15px;
             color: var(--accent-color);
+            font-weight: 800;
         }
 
         .contact-list {
@@ -328,22 +394,24 @@
             align-items: center;
             gap: 12px;
             color: var(--text-muted);
+            font-weight: 600;
         }
 
         .contact-list i {
-            color: var(--primary-light);
+            color: var(--primary-color);
         }
 
         .copyright {
             text-align: center;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--glass-border);
             color: var(--text-muted);
             font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
+            .hero h1 { font-size: 2.1rem; }
+            .hero-glass-card { padding: 30px 20px; }
             nav { display: none; }
         }
     </style>
@@ -369,9 +437,9 @@
 
     <!-- Hero Section -->
     <section id="hero" class="hero">
-        <div class="hero-content">
+        <div class="hero-glass-card">
             <span class="badge"><i class="fa-solid fa-seedling"></i> نضفي الحياة والجمال لمساحتك</span>
-            <h1>تصميم وتنسيق الحدائق وتوريد النباتات</h1>
+            <h1>تصصميم وتنسيق الحدائق وتوريد النباتات</h1>
             <p>نقدم أجود أنواع نباتات الزينة والظل والأشجار المثمرة مع خدمات تصميم وتنسيق الحدائق المنزلية وأحدث أنظمة الري وشبكات المياه.</p>
             
             <div class="cta-buttons">
@@ -396,28 +464,44 @@
         </div>
 
         <div class="cards-grid">
+            <!-- Service 1 -->
             <div class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-tree"></i></div>
-                <h3>تنسيق وتصميم الحدائق</h3>
-                <p>تصميم وتنفيذ الحدائق المنزلية والفيلات والمساحات الخضراء بأحدث الأساليب العصرية التي تناسب مساحتك.</p>
+                <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=600&q=80" alt="تنسيق حدائق" class="card-img">
+                <div class="card-body">
+                    <div class="card-icon"><i class="fa-solid fa-tree"></i></div>
+                    <h3>تنسيق وتصميم الحدائق</h3>
+                    <p>تصميم وتنفيذ الحدائق المنزلية والفيلات والمساحات الخضراء بأحدث الأساليب العصرية التي تناسب مساحتك.</p>
+                </div>
             </div>
 
+            <!-- Service 2 -->
             <div class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
-                <h3>شبكات الري الحديثة</h3>
-                <p>تركيب وتأسيس أنظمة الري الأوتوماتيكي والري بالتنقيط لتوفير المياه واستدامة نضارة النباتات.</p>
+                <img src="https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=600&q=80" alt="شبكات ري الحديثة" class="card-img">
+                <div class="card-body">
+                    <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
+                    <h3>شبكات الري الحديثة</h3>
+                    <p>تركيب وتأسيس أنظمة الري الأوتوماتيكي والري بالتنقيط لتوفير المياه واستدامة نضارة النباتات.</p>
+                </div>
             </div>
 
+            <!-- Service 3 -->
             <div class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-spa"></i></div>
-                <h3>نباتات زينة وظل</h3>
-                <p>تشكيلة واسعة من أندر نباتات الزينة الداخلية، الأشجار المثمرة، الورود والزهور الموسمية عالي الجودة.</p>
+                <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=80" alt="نباتات زينة" class="card-img">
+                <div class="card-body">
+                    <div class="card-icon"><i class="fa-solid fa-spa"></i></div>
+                    <h3>نباتات زينة وظل</h3>
+                    <p>تشكيلة واسعة من أندر نباتات الزينة الداخلية، الأشجار المثمرة، الورود والزهور الموسمية عالية الجودة.</p>
+                </div>
             </div>
 
+            <!-- Service 4 -->
             <div class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-scissors"></i></div>
-                <h3>الصيانة الدوريّة</h3>
-                <p>خدمات قص وتقليم الأشجار، تسميد التربة، ومكافحة الآفات لضمان خضرة ونمو حديقتك طوال العام.</p>
+                <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80" alt="صيانة حدائق" class="card-img">
+                <div class="card-body">
+                    <div class="card-icon"><i class="fa-solid fa-scissors"></i></div>
+                    <h3>الصيانة الدوريّة</h3>
+                    <p>خدمات قص وتقليم الأشجار، تسميد التربة، ومكافحة الآفات لضمان خضرة ونمو حديقتك طوال العام.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -429,7 +513,7 @@
                 <h3><i class="fa-solid fa-truck-ramp-box"></i> خدمة التوصيل السريع للمنزل</h3>
                 <p>اختر نباتاتك وأشجارك المفضلة وسنقوم بتوصيلها حتى باب منزلك بكل عناية وأمان بنفس الرقم.</p>
             </div>
-            <a href="https://wa.me/966579650183?text=السلام%20علیکم،%20أرغب%20في%20طلب%20خدمة%20توصيل%20نباتات" target="_blank" class="btn btn-whatsapp">
+            <a href="https://wa.me/966579650183?text=السلام%20عليكم،%20أرغب%20في%20طلب%20خدمة%20توصيل%20نباتات" target="_blank" class="btn btn-whatsapp">
                 <i class="fa-brands fa-whatsapp"></i> أطلب توصيل الآن
             </a>
         </div>
@@ -443,19 +527,19 @@
         </div>
 
         <div class="cards-grid">
-            <div class="glass-card">
+            <div class="glass-card" style="padding: 25px;">
                 <div class="card-icon"><i class="fa-solid fa-sun"></i></div>
                 <h3>الإضاءة المناسبة</h3>
                 <p>تأكد من اختيار الموقع المناسب لنباتك؛ النباتات الداخلية تحتاج لضوء غير مباشر، بينما أشجار الحدائق تتطلب أشعة شمس مباشرة.</p>
             </div>
 
-            <div class="glass-card">
+            <div class="glass-card" style="padding: 25px;">
                 <div class="card-icon"><i class="fa-solid fa-cloud-rain"></i></div>
                 <h3>التوازن في الري</h3>
                 <p>الري الزائد يسبب تعفن الجذور. افحص جفاف التربة بعمق 2-3 سم قبل إعادة سقي النبات مجدداً.</p>
             </div>
 
-            <div class="glass-card">
+            <div class="glass-card" style="padding: 25px;">
                 <div class="card-icon"><i class="fa-solid fa-temperature-arrow-up"></i></div>
                 <h3>التسميد الدوري</h3>
                 <p>استخدم الأسمدة المتوازنة خلال فصلي الربيع والصيف لدعم نمو الأوراق والأزهار بشكل صحي وقوي.</p>
